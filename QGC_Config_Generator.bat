@@ -7,10 +7,10 @@ set /p linkIp=Enter host IP (e.g. 192.168.2.101):
 set /p camIp=Enter camera IP (e.g. 192.168.2.102):
 
 :: === Paths ===
-set "template=C:\Soft\QGC_Config_Helper\Termit QGroundControl Daily_Template.ini"
-set "outputDir=C:\Soft\QGC_Config_Helper\Generated"
+set "template=C:\QGC_Config_Helper\Termit QGroundControl Daily_Template.ini"
+set "outputDir=C:\QGC_Config_Helper\Generated"
 set "outputFile=%outputDir%\Termit QGroundControl Daily_%configName%.ini"
-set "selectorScript=C:\Soft\QGC_Config_Helper\QGC_Config_Selector_main.bat"
+set "selectorScript=C:\QGC_Config_Helper\QGC_Config_Selector_main.bat"
 set "launcherFile=%outputDir%\Run_%configName%.bat"
 
 echo Generating "%outputFile%" from template...
