@@ -1,17 +1,32 @@
 @echo off
 setlocal enabledelayedexpansion
 
+:: === Figure out root folder (this script’s directory) ===
+set "rootDir=%~dp0"
+
 :: === Ask for parameters ===
 set /p configName=Enter config name (e.g. Lynx1):
-set /p linkIp=Enter host IP (e.g. 192.168.2.101):
+set /p linkIp=Enter link IP (e.g. 192.168.2.101):
 set /p camIp=Enter camera IP (e.g. 192.168.2.102):
+set /p shortcutDir=Enter folder where shortcut should be placed (Leave empty for default: Desktop):
+
+:: === Set default shortcut directory if blank ===
+if "%shortcutDir%"=="" (
+    set "shortcutDir=%USERPROFILE%\Desktop"
+    echo No folder specified. Using default: "%shortcutDir%"
+)
+
+if not exist "%shortcutDir%" mkdir "%shortcutDir%"
 
 :: === Paths ===
-set "template=C:\QGC_Config_Helper\Termit QGroundControl Daily_Template.ini"
-set "outputDir=C:\QGC_Config_Helper\Generated"
+set "template=%rootDir%Termit QGroundControl Daily_Template.ini"
+set "outputDir=%rootDir%Generated"
 set "outputFile=%outputDir%\Termit QGroundControl Daily_%configName%.ini"
-set "selectorScript=C:\QGC_Config_Helper\QGC_Config_Selector_main.bat"
+set "selectorScript=%rootDir%QGC_Config_Selector_main.bat"
 set "launcherFile=%outputDir%\Run_%configName%.bat"
+set "shortcutScript=%rootDir%CreateShortcut.ps1"
+:: TODO think about cool icons 
+:: set "iconPath=%rootDir%icon\drone.ico"
 
 echo Generating "%outputFile%" from template...
 
@@ -57,4 +72,15 @@ echo Creating launcher: "%launcherFile%"...
 
 echo Launcher created: "%launcherFile%"
 echo.
+
+:: === Create shortcut ===
+powershell -ExecutionPolicy Bypass -File "%shortcutScript%" "%launcherFile%" "%shortcutDir%" -RunAsAdmin
+
+if %errorlevel% neq 0 (
+    echo Failed to create shortcut.
+) else (
+    echo Shortcut created successfully.
+)
+echo.
+
 pause
